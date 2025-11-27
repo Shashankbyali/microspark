@@ -141,6 +141,8 @@ function displayProgress(data) {
             `;
         }).join('');
     }
+
+    renderCalendar(Array.isArray(daily_data) ? daily_data : []);
 }
 
 function escapeHtml(text) {
@@ -166,5 +168,73 @@ function openProofModal(fileUrl, type) {
             }
         });
     }
+}
+
+function renderCalendar(dailyData) {
+    const calendarGrid = document.getElementById('calendar-grid');
+    const rangeLabel = document.getElementById('calendar-range');
+    if (!calendarGrid) return;
+
+    const CALENDAR_WEEKS = 20;
+    const DAYS_IN_WEEK = 7;
+    const totalDays = CALENDAR_WEEKS * DAYS_IN_WEEK;
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const startDate = new Date(today);
+    startDate.setDate(startDate.getDate() - (totalDays - 1));
+    // Align to Monday
+    const dayOfWeek = (startDate.getDay() + 6) % 7;
+    startDate.setDate(startDate.getDate() - dayOfWeek);
+
+    const startDateCopy = new Date(startDate);
+    if (rangeLabel) {
+        rangeLabel.textContent = `${formatRangeLabel(startDateCopy)} – ${formatRangeLabel(today, true)}`;
+    }
+
+    const activityMap = dailyData.reduce((acc, day) => {
+        if (day.session_date) {
+            acc[day.session_date] = day.session_count || 0;
+        }
+        return acc;
+    }, {});
+
+    const fragment = document.createDocumentFragment();
+    const cursor = new Date(startDate);
+
+    for (let i = 0; i < totalDays; i++) {
+        const isoDate = cursor.toISOString().split('T')[0];
+        const cell = document.createElement('div');
+        cell.className = 'calendar-cell';
+        cell.setAttribute('data-date', isoDate);
+
+        if (cursor > today) {
+            cell.classList.add('calendar-future');
+            cell.title = `${isoDate} • Upcoming`;
+        } else if (activityMap[isoDate] > 0) {
+            const sessions = activityMap[isoDate];
+            cell.classList.add('calendar-active');
+            cell.title = `${isoDate} • ${sessions} session${sessions > 1 ? 's' : ''}`;
+        } else {
+            cell.classList.add('calendar-missed');
+            cell.title = `${isoDate} • Missed`;
+        }
+
+        fragment.appendChild(cell);
+        cursor.setDate(cursor.getDate() + 1);
+    }
+
+    calendarGrid.innerHTML = '';
+    calendarGrid.appendChild(fragment);
+}
+
+function formatRangeLabel(date, includeYear = false) {
+    const options = {
+        month: 'short',
+        day: 'numeric',
+        year: includeYear ? 'numeric' : undefined
+    };
+    return date.toLocaleDateString('en-US', options);
 }
 
