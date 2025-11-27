@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MicroSpark - Ignite Your Daily Growth</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="landing-container">
+        <div class="particles"></div>
+        <div class="content">
+            <div class="logo-section">
+                <h1 class="logo">⚡ MicroSpark</h1>
+                <p class="tagline">Transform 15-20 minutes into lifelong mastery</p>
+            </div>
+            
+            <div class="auth-container">
+                <div class="auth-tabs">
+                    <button class="tab-btn active" data-tab="signin">Sign In</button>
+                    <button class="tab-btn" data-tab="signup">Sign Up</button>
+                </div>
+                
+                <!-- Sign In Form -->
+                <div class="auth-form active" id="signin-form">
+                    <form id="signinForm">
+                        <div class="form-group">
+                            <input type="text" id="signin-username" placeholder="Username or Email" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="password" id="signin-password" placeholder="Password" required>
+                        </div>
+                        <button type="submit" class="btn-primary">Sign In</button>
+                    </form>
+                    <div class="error-message" id="signin-error"></div>
+                </div>
+                
+                <!-- Sign Up Form -->
+                <div class="auth-form" id="signup-form">
+                    <form id="signupForm">
+                        <div class="form-group">
+                            <input type="text" id="signup-username" placeholder="Username" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" id="signup-email" placeholder="Email" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="password" id="signup-password" placeholder="Password" required>
+                        </div>
+                        <button type="submit" class="btn-primary">Sign Up</button>
+                    </form>
+                    <div class="error-message" id="signup-error"></div>
+                </div>
+            </div>
+            
+            <div class="motivation-quote">
+                <p>"Small daily improvements lead to massive results"</p>
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/auth.js') }}"></script>
+</body>
+</html>
+

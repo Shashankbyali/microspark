@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choose Your Skill - MicroSpark</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-content">
+            <h2 class="nav-logo">⚡ MicroSpark</h2>
+            <div class="nav-links">
+                <a href="{{ url_for('choose_skill') }}" class="nav-link active">Practice</a>
+                <a href="{{ url_for('progress') }}" class="nav-link">Progress</a>
+                <a href="{{ url_for('logout') }}" class="nav-link">Logout</a>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="skill-container">
+        <div class="skill-content">
+            <h1 class="page-title">Choose Your Skill to Track</h1>
+            <p class="page-subtitle">What will you master today?</p>
+            
+            <div class="skill-form-card">
+                <form id="skillForm">
+                    <div class="form-group">
+                        <label for="skill-name">Skill Name</label>
+                        <input type="text" id="skill-name" placeholder="e.g., Guitar, Coding, Meditation..." required>
+                    </div>
+                    <div class="form-group">
+                        <label>Practice Time</label>
+                        <div class="time-options">
+                            <label class="time-option">
+                                <input type="radio" name="target-time" value="5" required>
+                                <span class="time-option-label">5 minutes</span>
+                            </label>
+                            <label class="time-option">
+                                <input type="radio" name="target-time" value="10" required>
+                                <span class="time-option-label">10 minutes</span>
+                            </label>
+                            <label class="time-option">
+                                <input type="radio" name="target-time" value="15" checked required>
+                                <span class="time-option-label">15 minutes</span>
+                            </label>
+                            <label class="time-option">
+                                <input type="radio" name="target-time" value="20" required>
+                                <span class="time-option-label">20 minutes</span>
+                            </label>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-primary btn-large">Start Practice Session</button>
+                </form>
+            </div>
+            
+            <!-- Timer Section (hidden initially) -->
+            <div class="timer-section" id="timer-section" style="display: none;">
+                <div class="timer-card">
+                    <h2 id="current-skill">Skill: <span id="skill-display"></span></h2>
+                    <div class="timer-display">
+                        <div class="timer-circle">
+                            <svg class="timer-svg" viewBox="0 0 200 200">
+                                <defs>
+                                    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                        <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+                                        <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+                                    </linearGradient>
+                                </defs>
+                                <circle class="timer-bg" cx="100" cy="100" r="90"></circle>
+                                <circle class="timer-progress" cx="100" cy="100" r="90" id="timer-progress"></circle>
+                            </svg>
+                            <div class="timer-text">
+                                <span id="timer-minutes">15</span>:<span id="timer-seconds">00</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="timer-controls">
+                        <button class="btn-secondary" id="pause-btn">Pause</button>
+                        <button class="btn-danger" id="stop-btn">Stop</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Upload Proof Section (hidden initially) -->
+            <div class="upload-section" id="upload-section" style="display: none;">
+                <div class="upload-card">
+                    <h2>🎉 Great Job! Session Complete!</h2>
+                    <p>Upload proof of your practice to track your progress</p>
+                    <form id="uploadForm" enctype="multipart/form-data">
+                        <div class="file-upload-area" id="file-upload-area">
+                            <input type="file" id="proof-file" name="file" accept="image/*,video/*,.pdf" required>
+                            <label for="proof-file" class="file-label">
+                                <span class="upload-icon">📎</span>
+                                <span class="upload-text">Click to upload or drag and drop</span>
+                                <span class="upload-hint">Images, Videos, or PDF (Max 16MB)</span>
+                            </label>
+                            <div class="file-preview" id="file-preview"></div>
+                        </div>
+                        <button type="submit" class="btn-primary btn-large">Submit Proof</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="{{ url_for('static', filename='js/skill.js') }}"></script>
+</body>
+</html>
+

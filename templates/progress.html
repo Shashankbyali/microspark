@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Progress - MicroSpark</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-content">
+            <h2 class="nav-logo">⚡ MicroSpark</h2>
+            <div class="nav-links">
+                <a href="{{ url_for('choose_skill') }}" class="nav-link">Practice</a>
+                <a href="{{ url_for('progress') }}" class="nav-link active">Progress</a>
+                <a href="{{ url_for('logout') }}" class="nav-link">Logout</a>
+            </div>
+        </div>
+    </nav>
+    
+    <div class="progress-container">
+        <div class="progress-content">
+            <!-- Streak Section -->
+            <div class="streak-section">
+                <div class="streak-card">
+                    <div class="streak-header">
+                        <h1>🔥 Your Streak</h1>
+                        <div class="streak-badge">
+                            <span class="streak-number" id="streak-count">0</span>
+                            <span class="streak-label">Days</span>
+                        </div>
+                    </div>
+                    <div class="motivation-message" id="motivation-message">
+                        <p>Start your journey today!</p>
+                    </div>
+                    <div class="streak-visual" id="streak-visual"></div>
+                </div>
+            </div>
+            
+            <!-- Stats Section -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">📊</div>
+                    <div class="stat-value" id="total-sessions">0</div>
+                    <div class="stat-label">Total Sessions</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⏱️</div>
+                    <div class="stat-value" id="total-time">0</div>
+                    <div class="stat-label">Minutes Practiced</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🎯</div>
+                    <div class="stat-value" id="skills-count">0</div>
+                    <div class="stat-label">Skills Tracked</div>
+                </div>
+            </div>
+            
+            <!-- Skill Breakdown -->
+            <div class="skills-section">
+                <h2 class="section-title">Your Skills</h2>
+                <div class="skills-list" id="skills-list"></div>
+            </div>
+            
+            <!-- History Section -->
+            <div class="history-section">
+                <h2 class="section-title">Recent Sessions</h2>
+                <div class="history-list" id="history-list">
+                    <div class="loading">Loading your progress...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="{{ url_for('static', filename='js/progress.js') }}"></script>
+</body>
+</html>
+
