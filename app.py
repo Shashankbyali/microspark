@@ -252,8 +252,44 @@ def uploaded_file(filename):
 # ------------------------------
 # PROGRESS STATISTICS ENDPOINT
 # ------------------------------
+def normalize_timestamp(value):
+    """Convert sqlite timestamp strings to ISO 8601 for frontend parsing."""
+    if not value:
+        return value
+    if isinstance(value, datetime):
+        return value.isoformat()
+    try:
+        return datetime.fromisoformat(value).isoformat()
+    except ValueError:
+        try:
+            # Fallback for strings without seconds or other formats
+            return datetime.strptime(value, '%Y-%m-%d %H:%M:%S').isoformat()
+        except ValueError:
+            return value
+
+
+def calculate_streak(daily_rows):
+    """Calculate the current streak based on consecutive daily activity."""
+    today = datetime.now().date()
+    streak = 0
+    for row in daily_rows:
+        entry_date = row['session_date']
+        try:
+            entry_date = datetime.strptime(entry_date, '%Y-%m-%d').date()
+        except ValueError:
+            continue
+
+        if entry_date == today - timedelta(days=streak):
+            streak += 1
+        elif entry_date < today - timedelta(days=streak):
+            break
+    return streak
+
+
 @app.route('/progress')
 def progress():
+    if 'user_id' not in session:
+        return redirect(url_for('index'))
     return render_template('progress.html')
 
 
@@ -272,9 +308,42 @@ def get_progress():
         WHERE s.user_id = ?
         ORDER BY s.completed_at DESC
     ''', (session['user_id'],))
-    sessions = [dict(row) for row in cursor.fetchall()]
+    sessions = []
+    for row in cursor.fetchall():
+        session_dict = dict(row)
+        session_dict['completed_at'] = normalize_timestamp(session_dict.get('completed_at'))
+        sessions.append(session_dict)
 
-    return jsonify({'sessions': sessions})
+    cursor.execute('''
+        SELECT sk.skill_name,
+               COUNT(s.id) AS session_count,
+               COALESCE(SUM(s.duration), 0) AS total_time
+        FROM skills sk
+        LEFT JOIN sessions s ON s.skill_id = sk.id AND s.user_id = ?
+        WHERE sk.user_id = ?
+        GROUP BY sk.id, sk.skill_name
+        ORDER BY sk.skill_name
+    ''', (session['user_id'], session['user_id']))
+    skill_stats = [dict(row) for row in cursor.fetchall()]
+
+    cursor.execute('''
+        SELECT DATE(completed_at) AS session_date,
+               COUNT(*) AS session_count,
+               COALESCE(SUM(duration), 0) AS total_time
+        FROM sessions
+        WHERE user_id = ?
+        GROUP BY DATE(completed_at)
+        ORDER BY session_date DESC
+    ''', (session['user_id'],))
+    daily_rows = [dict(row) for row in cursor.fetchall()]
+    streak = calculate_streak(daily_rows)
+
+    return jsonify({
+        'streak': streak,
+        'sessions': sessions,
+        'skill_stats': skill_stats,
+        'daily_data': daily_rows
+    })
 
 
 if __name__ == '__main__':
