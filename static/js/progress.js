@@ -98,11 +98,43 @@ function displayProgress(data) {
                 minute: '2-digit'
             });
             
+            let proofHtml = '';
+            if (session.proof_file) {
+                const fileUrl = `/uploads/${session.proof_file}`;
+                const fileExt = session.proof_file.split('.').pop().toLowerCase();
+                
+                if (['jpg', 'jpeg', 'png', 'gif'].includes(fileExt)) {
+                    proofHtml = `
+                        <div class="proof-preview">
+                            <img src="${fileUrl}" alt="Proof" class="proof-image" onclick="openProofModal('${fileUrl}', 'image')">
+                        </div>
+                    `;
+                } else if (['mp4', 'mov', 'avi'].includes(fileExt)) {
+                    proofHtml = `
+                        <div class="proof-preview">
+                            <video controls class="proof-video" onclick="event.stopPropagation()">
+                                <source src="${fileUrl}" type="video/${fileExt === 'mov' ? 'quicktime' : fileExt}">
+                            </video>
+                        </div>
+                    `;
+                } else if (fileExt === 'pdf') {
+                    proofHtml = `
+                        <div class="proof-preview">
+                            <a href="${fileUrl}" target="_blank" class="proof-link">
+                                <span class="proof-icon">📄</span>
+                                <span>View PDF</span>
+                            </a>
+                        </div>
+                    `;
+                }
+            }
+            
             return `
                 <div class="history-item">
                     <div class="history-info">
                         <div class="history-skill">${escapeHtml(session.skill_name)}</div>
                         <div class="history-date">${dateStr}</div>
+                        ${proofHtml}
                     </div>
                     <div class="history-duration">${session.duration || 0} min</div>
                 </div>
@@ -115,5 +147,24 @@ function escapeHtml(text) {
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
+}
+
+function openProofModal(fileUrl, type) {
+    if (type === 'image') {
+        const modal = document.createElement('div');
+        modal.className = 'proof-modal';
+        modal.innerHTML = `
+            <div class="proof-modal-content">
+                <span class="proof-modal-close" onclick="this.closest('.proof-modal').remove()">&times;</span>
+                <img src="${fileUrl}" alt="Proof" class="proof-modal-image">
+            </div>
+        `;
+        document.body.appendChild(modal);
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.remove();
+            }
+        });
+    }
 }
 
