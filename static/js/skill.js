@@ -6,11 +6,76 @@ let isPaused = false;
 let timerRunning = false;
 
 document.addEventListener('DOMContentLoaded', function() {
+    const skillTypeInputs = document.querySelectorAll('input[name="skill-type"]');
+    const othersInputGroup = document.getElementById('others-input-group');
+    const skillNameInput = document.getElementById('skill-name');
+    const challengesSection = document.getElementById('challenges-section');
+    const challengesContainer = document.getElementById('challenges-container');
+    
+    // Handle skill type selection
+    skillTypeInputs.forEach(input => {
+        input.addEventListener('change', async () => {
+            const selectedSkill = input.value;
+            
+            if (selectedSkill === 'Others') {
+                othersInputGroup.style.display = 'block';
+                skillNameInput.required = true;
+                challengesSection.style.display = 'none';
+            } else {
+                othersInputGroup.style.display = 'none';
+                skillNameInput.required = false;
+                challengesSection.style.display = 'block';
+                
+                // Fetch challenges
+                challengesContainer.innerHTML = '<div class="loading-small">Loading challenges...</div>';
+                
+                try {
+                    const response = await fetch('/api/challenges', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            skill_type: selectedSkill
+                        })
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.success && data.challenges) {
+                        challengesContainer.innerHTML = data.challenges.map((challenge, index) => `
+                            <div class="challenge-item">
+                                <div class="challenge-number">${index + 1}</div>
+                                <div class="challenge-text">${escapeHtml(challenge)}</div>
+                            </div>
+                        `).join('');
+                    } else {
+                        challengesContainer.innerHTML = '<div class="loading-small">Unable to load challenges. You can still proceed!</div>';
+                    }
+                } catch (error) {
+                    challengesContainer.innerHTML = '<div class="loading-small">Unable to load challenges. You can still proceed!</div>';
+                }
+            }
+        });
+    });
+    
     // Skill form submission
     document.getElementById('skillForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         
-        const skillName = document.getElementById('skill-name').value;
+        const selectedSkillType = document.querySelector('input[name="skill-type"]:checked').value;
+        let skillName;
+        
+        if (selectedSkillType === 'Others') {
+            skillName = document.getElementById('skill-name').value.trim();
+            if (!skillName) {
+                alert('Please enter a skill name');
+                return;
+            }
+        } else {
+            skillName = selectedSkillType;
+        }
+        
         const targetTime = parseInt(document.querySelector('input[name="target-time"]:checked').value);
         
         try {
@@ -196,5 +261,11 @@ function updateTimerDisplay() {
     const progress = (totalSeconds / targetSeconds) * 565.48;
     const progressCircle = document.getElementById('timer-progress');
     progressCircle.style.strokeDashoffset = (565.48 - progress).toString();
+}
+
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
 }
 
