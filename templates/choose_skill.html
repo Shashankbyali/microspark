@@ -26,8 +26,47 @@
             <div class="skill-form-card">
                 <form id="skillForm">
                     <div class="form-group">
+                        <label>Choose Your Skill</label>
+                        <div class="skill-options">
+                            <label class="skill-option">
+                                <input type="radio" name="skill-type" value="Coding" required>
+                                <span class="skill-option-label">
+                                    <span class="skill-icon">💻</span>
+                                    <span>Coding</span>
+                                </span>
+                            </label>
+                            <label class="skill-option">
+                                <input type="radio" name="skill-type" value="Writing" required>
+                                <span class="skill-option-label">
+                                    <span class="skill-icon">✍️</span>
+                                    <span>Writing</span>
+                                </span>
+                            </label>
+                            <label class="skill-option">
+                                <input type="radio" name="skill-type" value="Painting" required>
+                                <span class="skill-option-label">
+                                    <span class="skill-icon">🎨</span>
+                                    <span>Painting</span>
+                                </span>
+                            </label>
+                            <label class="skill-option">
+                                <input type="radio" name="skill-type" value="Others" required>
+                                <span class="skill-option-label">
+                                    <span class="skill-icon">➕</span>
+                                    <span>Others</span>
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group" id="others-input-group" style="display: none;">
                         <label for="skill-name">Skill Name</label>
-                        <input type="text" id="skill-name" placeholder="e.g., Guitar, Coding, Meditation..." required>
+                        <input type="text" id="skill-name" placeholder="e.g., Guitar, Meditation, Piano..." />
+                    </div>
+                    <div class="form-group" id="challenges-section" style="display: none;">
+                        <label>Suggested Challenges</label>
+                        <div class="challenges-container" id="challenges-container">
+                            <div class="loading-small">Loading challenges...</div>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label>Practice Time</label>
