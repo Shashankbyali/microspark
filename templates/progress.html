@@ -20,20 +20,59 @@
     
     <div class="progress-container">
         <div class="progress-content">
-            <!-- Streak Section -->
-            <div class="streak-section">
-                <div class="streak-card">
-                    <div class="streak-header">
-                        <h1>🔥 Your Streak</h1>
-                        <div class="streak-badge">
-                            <span class="streak-number" id="streak-count">0</span>
-                            <span class="streak-label">Days</span>
+            <!-- Streak + Calendar -->
+            <div class="streak-calendar-grid">
+                <div class="streak-section">
+                    <div class="streak-card">
+                        <div class="streak-header">
+                            <h1>🔥 Your Streak</h1>
+                            <div class="streak-badge">
+                                <span class="streak-number" id="streak-count">0</span>
+                                <span class="streak-label">Days</span>
+                            </div>
+                        </div>
+                        <div class="motivation-message" id="motivation-message">
+                            <p>Start your journey today!</p>
+                        </div>
+                        <div class="streak-visual" id="streak-visual"></div>
+                    </div>
+                </div>
+
+                <div class="calendar-section">
+                    <div class="calendar-header">
+                        <div>
+                            <h2 class="section-title">Consistency Calendar</h2>
+                            <p class="calendar-subtitle" id="calendar-range">Tracking your last 20 weeks</p>
+                        </div>
+                        <div class="calendar-legend">
+                            <span class="legend-item">
+                                <span class="legend-dot legend-active"></span>
+                                Worked
+                            </span>
+                            <span class="legend-item">
+                                <span class="legend-dot legend-missed"></span>
+                                Missed
+                            </span>
+                            <span class="legend-item">
+                                <span class="legend-dot legend-future"></span>
+                                Upcoming
+                            </span>
                         </div>
                     </div>
-                    <div class="motivation-message" id="motivation-message">
-                        <p>Start your journey today!</p>
+                    <div class="calendar-grid-wrapper">
+                        <div class="calendar-weekdays">
+                            <span>Mon</span>
+                            <span></span>
+                            <span>Wed</span>
+                            <span></span>
+                            <span>Fri</span>
+                            <span></span>
+                            <span>Sun</span>
+                        </div>
+                        <div class="calendar-grid" id="calendar-grid">
+                            <div class="loading">Generating calendar...</div>
+                        </div>
                     </div>
-                    <div class="streak-visual" id="streak-visual"></div>
                 </div>
             </div>
             
